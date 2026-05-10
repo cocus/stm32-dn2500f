@@ -300,7 +300,6 @@ const static seg_pair_t lcd_icons[] = {
     [LCD_ICON_PITCH_DOT] = SSG(16, 7),
     [LCD_ICON_KEYINDEX_DOT] = SSG(12, 2)};
 
-
 /*
 data[00] => bit 0 = first big number: C
 data[00] => bit 1 = first big number: B
@@ -629,42 +628,164 @@ led_matrix_t leds[2][LED_LAST+1] =
     },
 };
 
-
 typedef struct
 {
-    GPIO_TypeDef *  port;
-    uint16_t        pin;
+    GPIO_TypeDef *port;
+    uint16_t pin;
 } gpio_mapping_t;
 
 gpio_mapping_t gpio_drv[] =
 {
-    { LDRV0_GPIO_Port, LDRV0_Pin },
-    { LDRV1_GPIO_Port, LDRV1_Pin },
-    { LDRV2_GPIO_Port, LDRV2_Pin },
-    { LDRV3_GPIO_Port, LDRV3_Pin },
-    { LDRV4_GPIO_Port, LDRV4_Pin },
-    { LDRV5_GPIO_Port, LDRV5_Pin },
+    [0] = {LDRV0_GPIO_Port, LDRV0_Pin},
+    [1] = {LDRV1_GPIO_Port, LDRV1_Pin},
+    [2] = {LDRV2_GPIO_Port, LDRV2_Pin},
+    [3] = {LDRV3_GPIO_Port, LDRV3_Pin},
+    [4] = {LDRV4_GPIO_Port, LDRV4_Pin},
+    [5] = {LDRV5_GPIO_Port, LDRV5_Pin},
 
-    { RDRV0_GPIO_Port, RDRV0_Pin },
-    { RDRV1_GPIO_Port, RDRV1_Pin },
-    { RDRV2_GPIO_Port, RDRV2_Pin },
-    { RDRV3_GPIO_Port, RDRV3_Pin },
-
+    [6] = {RDRV0_GPIO_Port, RDRV0_Pin},
+    [7] = {RDRV1_GPIO_Port, RDRV1_Pin},
+    [8] = {RDRV2_GPIO_Port, RDRV2_Pin},
+    [9] = {RDRV3_GPIO_Port, RDRV3_Pin},
 };
 
 gpio_mapping_t gpio_leds[] =
 {
-    { LEDS0_GPIO_Port, LEDS0_Pin },
-    { LEDS1_GPIO_Port, LEDS1_Pin },
-    { LEDS2_GPIO_Port, LEDS2_Pin },
-    { LEDS3_GPIO_Port, LEDS3_Pin },
-    { LEDS4_GPIO_Port, LEDS4_Pin },
+    {LEDS0_GPIO_Port, LEDS0_Pin},
+    {LEDS1_GPIO_Port, LEDS1_Pin},
+    {LEDS2_GPIO_Port, LEDS2_Pin},
+    {LEDS3_GPIO_Port, LEDS3_Pin},
+    {LEDS4_GPIO_Port, LEDS4_Pin},
 };
+
+gpio_mapping_t gpio_kbd_matrix[] =
+{
+    [0] = {K0_GPIO_Port, K0_Pin},
+    [1] = {K1_GPIO_Port, K1_Pin},
+    [2] = {K2_GPIO_Port, K2_Pin},
+    [3] = {K3_GPIO_Port, K3_Pin},
+    [4] = {K4_GPIO_Port, K4_Pin},
+    [5] = {K5_GPIO_Port, K5_Pin},
+    [6] = {K6_GPIO_Port, K6_Pin},
+    [7] = {K7_GPIO_Port, K7_Pin},
+};
+
+typedef enum
+{
+    BTN_LEFT_OPEN_CLOSE = 0,
+    BTN_LEFT_TIME,
+    BTN_LEFT_CONT_SINGLE,
+    BTN_LEFT_INDEX,
+    BTN_LEFT_LOOP,
+    BTN_LEFT_LOOP_A,
+    BTN_LEFT_LOOP_B,
+    BTN_LEFT_EXIT_RELOOP,
+    BTN_LEFT_TRACK_PREV,
+    BTN_LEFT_TRAKC_NEXT,
+    BTN_LEFT_REVERSE,
+    BTN_LEFT_SAMPLER,
+    BTN_LEFT_CUE,
+    BTN_LEFT_PLAY,
+    BTN_LEFT_PITCH,
+    BTN_LEFT_KEY,
+    BTN_LEFT_KEY_DOWN,
+    BTN_LEFT_KEY_UP,
+    BTN_LEFT_PITCH_MINUS,
+    BTN_LEFT_PITCH_PLUS,
+
+    BTN_MIDDLE_DECK_1,
+    BTN_MIDDLE_DECK_2,
+    BTN_MIDDLE_PRESET,
+    BTN_MIDDLE_MEMO_CALL,
+    BTN_MIDDLE_MEMO,
+    BTN_MIDDLE_1,
+    BTN_MIDDLE_2,
+    BTN_MIDDLE_3,
+    BTN_MIDDLE_4,
+    BTN_MIDDLE_5,
+    BTN_MIDDLE_6,
+    BTN_MIDDLE_7,
+    BTN_MIDDLE_8,
+    BTN_MIDDLE_9,
+    BTN_MIDDLE_0,
+    BTN_MIDDLE_CLEAR,
+    BTN_MIDDLE_VOICE_REDUCER,
+    BTN_MIDDLE_BRAKE,
+
+    BTN_RIGHT_OPEN_CLOSE,
+    BTN_RIGHT_TIME,
+    BTN_RIGHT_CONT_SINGLE,
+    BTN_RIGHT_INDEX,
+    BTN_RIGHT_LOOP,
+    BTN_RIGHT_LOOP_A,
+    BTN_RIGHT_LOOP_B,
+    BTN_RIGHT_EXIT_RELOOP,
+    BTN_RIGHT_TRACK_PREV,
+    BTN_RIGHT_TRAKC_NEXT,
+    BTN_RIGHT_REVERSE,
+    BTN_RIGHT_SAMPLER,
+    BTN_RIGHT_CUE,
+    BTN_RIGHT_PLAY,
+    BTN_RIGHT_PITCH,
+    BTN_RIGHT_KEY,
+    BTN_RIGHT_KEY_DOWN,
+    BTN_RIGHT_KEY_UP,
+    BTN_RIGHT_PITCH_MINUS,
+    BTN_RIGHT_PITCH_PLUS,
+
+    BTN_NULL = 0xff,
+} deck_buttons_t;
+
+typedef struct
+{
+    deck_buttons_t k[8];
+    uint8_t state;
+} buttons_map_t;
+
+buttons_map_t map[] =
+{
+    /* K0, K1, K2, K3, K4, K5, K6, K7 */
+    [0] /* LDRV0 */ = {{BTN_MIDDLE_7, BTN_MIDDLE_6, BTN_MIDDLE_5, BTN_MIDDLE_4, BTN_MIDDLE_3, BTN_MIDDLE_2, BTN_MIDDLE_1, BTN_MIDDLE_0}, 0xff},
+    [1] /* LDRV1 */ = {{BTN_MIDDLE_DECK_2, BTN_MIDDLE_DECK_1, BTN_MIDDLE_CLEAR, BTN_MIDDLE_MEMO_CALL, BTN_MIDDLE_MEMO, BTN_MIDDLE_PRESET, BTN_MIDDLE_9, BTN_MIDDLE_8}, 0xff},
+    [2] /* LDRV2 */ = {{BTN_NULL, BTN_LEFT_REVERSE, BTN_LEFT_PITCH_PLUS, BTN_LEFT_PITCH_MINUS, BTN_LEFT_KEY_DOWN, BTN_LEFT_KEY_UP, BTN_LEFT_KEY, BTN_LEFT_PITCH}, 0xff},
+    [3] /* LDRV3 */ = {{BTN_MIDDLE_BRAKE, BTN_MIDDLE_VOICE_REDUCER, BTN_LEFT_CONT_SINGLE, BTN_LEFT_TIME, BTN_LEFT_EXIT_RELOOP, BTN_LEFT_LOOP_B, BTN_LEFT_LOOP_A, BTN_LEFT_LOOP}, 0xff},
+    [4] /* LDRV4 */ = {{BTN_NULL, BTN_LEFT_INDEX, BTN_LEFT_OPEN_CLOSE, BTN_LEFT_PLAY, BTN_LEFT_CUE, BTN_LEFT_SAMPLER, BTN_LEFT_TRAKC_NEXT, BTN_LEFT_TRACK_PREV}, 0xff},
+    /* JOGG wheel */
+    [5] /* LDRV5 */ = {{BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL}, 0xff},
+
+    [6] /* RDRV0 */ = {{BTN_RIGHT_REVERSE, BTN_RIGHT_PITCH_PLUS, BTN_RIGHT_PITCH_MINUS, BTN_RIGHT_KEY_DOWN, BTN_RIGHT_KEY_UP, BTN_RIGHT_KEY, BTN_RIGHT_PITCH, BTN_NULL}, 0xff},
+    [7] /* RDRV1 */ = {{BTN_NULL, BTN_RIGHT_CONT_SINGLE, BTN_RIGHT_TIME, BTN_RIGHT_EXIT_RELOOP, BTN_RIGHT_LOOP_B, BTN_RIGHT_LOOP_A, BTN_RIGHT_LOOP, BTN_NULL}, 0xff},
+    [8] /* RDRV2 */ = {{BTN_RIGHT_INDEX, BTN_RIGHT_OPEN_CLOSE, BTN_RIGHT_PLAY, BTN_RIGHT_CUE, BTN_RIGHT_SAMPLER, BTN_RIGHT_TRAKC_NEXT, BTN_RIGHT_TRACK_PREV, BTN_NULL}, 0xff},
+    /* JOGG wheel */
+    [9] /* RDRV3 */ = {{BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL, BTN_NULL}, 0xff},
+};
+
+#pragma pack(push, 1)
+typedef struct
+{
+    uint8_t deck;
+    uint8_t event;
+    uint8_t button;
+    uint8_t filler;
+} scan_result_ev_t;
+#pragma pack(pop)
+
+uint8_t gpio_kbd_matrix_get(void)
+{
+    uint8_t ret = 0;
+
+    for (size_t i = 0; i < (sizeof(gpio_kbd_matrix) / sizeof(gpio_kbd_matrix[0])); i++)
+    {
+        ret |= HAL_GPIO_ReadPin(gpio_kbd_matrix[i].port, gpio_kbd_matrix[i].pin) ? (1U << i) : 0;
+    }
+
+    return ret;
+}
 
 void gpio_drv_set(uint16_t sel)
 {
     // set DRVx gpios
-    for (size_t i = 0; i < (sizeof(gpio_drv)/sizeof(gpio_drv[0])); i++)
+    for (size_t i = 0; i < (sizeof(gpio_drv) / sizeof(gpio_drv[0])); i++)
     {
         HAL_GPIO_WritePin(gpio_drv[i].port, gpio_drv[i].pin, (sel & (1U << i)) ? 1 : 0);
     }
@@ -743,9 +864,10 @@ void MIDI_addToUSBReport(uint8_t cable, uint8_t message, uint8_t param1, uint8_t
 }
 
 uint8_t lcd_data[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x8};
-static uint8_t lcd_bits[2][20] = { {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x8}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x8}};
+static uint8_t lcd_bits[2][20] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x8}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x8}};
 
-typedef enum {
+typedef enum
+{
     CMD_LED_ON = 0x4a,
     CMD_LED_OFF = 0x4b,
     CMD_LED_BLINK = 0x4c,
@@ -765,7 +887,8 @@ typedef enum {
     CMD_TRACK_POS_REVERSE = 0x49,
 } command_from_pc_types_enum_t;
 
-typedef enum {
+typedef enum
+{
     CC_LED_PLAY = 80,
     CC_LED_CUE,
     CC_LED_PITCH,
@@ -778,8 +901,9 @@ typedef enum {
     CC_LED_STBY
 } custom_midi_cc_enum_t;
 
-#pragma pack(push,1)
-typedef struct {
+#pragma pack(push, 1)
+typedef struct
+{
     uint8_t deck;
     uint8_t cmd;
     uint8_t value;
@@ -796,7 +920,7 @@ void MIDI_ProcessUSBData(void)
     uint8_t processed = 0;
 
     command_from_pc_t cmd;
-    uint32_t *msg = (uint32_t*)&cmd;
+    uint32_t *msg = (uint32_t *)&cmd;
 
     if (buffUsbCurrIndex == buffUsbNextIndex)
         return;
@@ -827,92 +951,96 @@ void MIDI_ProcessUSBData(void)
     {
         switch (cmd.cmd)
         {
-            /* ON trigger for LED */
-            case 0x4a:
-            /* OFF trigger for LED */
-            case 0x4b:
-            /* Blink trigger for LED */
-            case 0x4c:
+        /* ON trigger for LED */
+        case 0x4a:
+        /* OFF trigger for LED */
+        case 0x4b:
+        /* Blink trigger for LED */
+        case 0x4c:
+        {
+            // processed = 1;
+            break;
+        }
+
+        /* ON trigger for VFD */
+        case 0x4d:
+        /* OFF trigger for VFD */
+        case 0x4e:
+        /* Blink trigger for VFD */
+        case 0x4f:
+        {
+            switch (cmd.value)
             {
-                //processed = 1;
+            /* T. */
+            case 0x01:
                 break;
-            }
-
-            /* ON trigger for VFD */
-            case 0x4d:
-            /* OFF trigger for VFD */
-            case 0x4e:
-            /* Blink trigger for VFD */
-            case 0x4f:
-            {
-                switch (cmd.value)
-                {
-                    /* T. */
-                    case 0x01:  break;
-                    /* REMAIN */
-                    case 0x02:
-                    /* ELAPSED */
-                    case 0x03:
-                    /* CONT. */
-                    case 0x04:
-                    /* SINGLE */
-                    case 0x05:
-                    {
-                        processed = 1;
-                        break;
-                    }
-
-                    /* BPM */
-                    case 0x06:  break;
-                    /* m */
-                    case 0x07:  break;
-                    /* s */
-                    case 0x08:  break;
-                    /* f */
-                    case 0x09:  break;
-                    /* Pitch dot Right */
-                    case 0x0A:
-                    /* Pitch dot center */
-                    case 0x0B:
-                    /* Pitch dot left */
-                    case 0x0C:
-                    /* Key ADJ */
-                    case 0x14:
-                    /* Track position blink */
-                    case 0x21:
-                    {
-                        processed = 1;
-                        break;
-                    }
-
-                }
-                break;
-            }
-
-            /* Tr number MSB */
-            case 0x40:
-            /* Tr number LSB */
-            case 0x41:
-            /* Time minutes */
-            case 0x42:
-            /* Time sec */
-            case 0x43:
-            /* Time frame */
-            case 0x44:
-            /* Pitch POL */
-            case 0x45:
-            /* Pitch MSB */
-            case 0x46:
-            /* Pitch LSB */
-            case 0x47:
-            /* Track Position normal */
-            case 0x48:
-            /* Track Position reverse */
-            case 0x49:
+            /* REMAIN */
+            case 0x02:
+            /* ELAPSED */
+            case 0x03:
+            /* CONT. */
+            case 0x04:
+            /* SINGLE */
+            case 0x05:
             {
                 processed = 1;
                 break;
             }
+
+            /* BPM */
+            case 0x06:
+                break;
+            /* m */
+            case 0x07:
+                break;
+            /* s */
+            case 0x08:
+                break;
+            /* f */
+            case 0x09:
+                break;
+            /* Pitch dot Right */
+            case 0x0A:
+            /* Pitch dot center */
+            case 0x0B:
+            /* Pitch dot left */
+            case 0x0C:
+            /* Key ADJ */
+            case 0x14:
+            /* Track position blink */
+            case 0x21:
+            {
+                processed = 1;
+                break;
+            }
+            }
+            break;
+        }
+
+        /* Tr number MSB */
+        case 0x40:
+        /* Tr number LSB */
+        case 0x41:
+        /* Time minutes */
+        case 0x42:
+        /* Time sec */
+        case 0x43:
+        /* Time frame */
+        case 0x44:
+        /* Pitch POL */
+        case 0x45:
+        /* Pitch MSB */
+        case 0x46:
+        /* Pitch LSB */
+        case 0x47:
+        /* Track Position normal */
+        case 0x48:
+        /* Track Position reverse */
+        case 0x49:
+        {
+            processed = 1;
+            break;
+        }
         }
     }
 
@@ -965,7 +1093,8 @@ HAL_StatusTypeDef lcd_update(uint8_t deck)
     }
 
     ret = HAL_SPI_Transmit(&hspi1, &ccb_addr, 1, HAL_MAX_DELAY);
-    if (ret != HAL_OK) {
+    if (ret != HAL_OK)
+    {
         return ret;
     }
 
@@ -1024,7 +1153,8 @@ typedef enum
 
 struct
 {
-    struct {
+    struct
+    {
         deck_led_vfd_trig_enum_t play;
         deck_led_vfd_trig_enum_t cue;
         deck_led_vfd_trig_enum_t pitch;
@@ -1036,7 +1166,8 @@ struct
         deck_led_vfd_trig_enum_t stby;
         deck_led_vfd_trig_enum_t samp;
     } leds;
-    struct {
+    struct
+    {
         deck_led_vfd_trig_enum_t remain;
         deck_led_vfd_trig_enum_t elapsed;
         deck_led_vfd_trig_enum_t cont;
@@ -1059,7 +1190,7 @@ struct
     bool track_pos_is_rev;
 } decks[2];
 
-bool cmd_minutes(command_from_pc_t*cmd)
+bool cmd_minutes(command_from_pc_t *cmd)
 {
     if (decks[cmd->deck].minutes == cmd->value)
         return false;
@@ -1070,7 +1201,7 @@ bool cmd_minutes(command_from_pc_t*cmd)
     return true;
 }
 
-bool cmd_seconds(command_from_pc_t*cmd)
+bool cmd_seconds(command_from_pc_t *cmd)
 {
     if (decks[cmd->deck].seconds == cmd->value)
         return false;
@@ -1081,7 +1212,7 @@ bool cmd_seconds(command_from_pc_t*cmd)
     return true;
 }
 
-bool cmd_frames(command_from_pc_t*cmd)
+bool cmd_frames(command_from_pc_t *cmd)
 {
     if (decks[cmd->deck].frames == cmd->value)
         return false;
@@ -1092,7 +1223,7 @@ bool cmd_frames(command_from_pc_t*cmd)
     return true;
 }
 
-bool cmd_pitch_pol(command_from_pc_t*cmd)
+bool cmd_pitch_pol(command_from_pc_t *cmd)
 {
     if (decks[cmd->deck].pitch_pol == cmd->value)
         return false;
@@ -1101,35 +1232,35 @@ bool cmd_pitch_pol(command_from_pc_t*cmd)
 
     switch (cmd->value)
     {
-        /* " " */
-        case 0:
-        {
-            lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_HORIZONTAL, 0, lcd_bits[cmd->deck]);
-            lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_VERTICAL, 0, lcd_bits[cmd->deck]);
-            break;
-        }
+    /* " " */
+    case 0:
+    {
+        lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_HORIZONTAL, 0, lcd_bits[cmd->deck]);
+        lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_VERTICAL, 0, lcd_bits[cmd->deck]);
+        break;
+    }
 
-        /* "+" */
-        case 1:
-        {
-            lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_HORIZONTAL, 1, lcd_bits[cmd->deck]);
-            lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_VERTICAL, 1, lcd_bits[cmd->deck]);
-            break;
-        }
+    /* "+" */
+    case 1:
+    {
+        lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_HORIZONTAL, 1, lcd_bits[cmd->deck]);
+        lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_VERTICAL, 1, lcd_bits[cmd->deck]);
+        break;
+    }
 
-        /* "-" */
-        case 2:
-        {
-            lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_HORIZONTAL, 1, lcd_bits[cmd->deck]);
-            lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_VERTICAL, 0, lcd_bits[cmd->deck]);
-            break;
-        }
+    /* "-" */
+    case 2:
+    {
+        lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_HORIZONTAL, 1, lcd_bits[cmd->deck]);
+        lcd_set_icon(LCD_ICON_PLUSMINUS_RIGHT_VERTICAL, 0, lcd_bits[cmd->deck]);
+        break;
+    }
     }
 
     return true;
 }
 
-bool cmd_pitch(command_from_pc_t*cmd)
+bool cmd_pitch(command_from_pc_t *cmd)
 {
     if (cmd->cmd == CMD_PITCH_MSB)
     {
@@ -1162,7 +1293,7 @@ bool cmd_pitch(command_from_pc_t*cmd)
     return true;
 }
 
-bool cmd_vfd(command_from_pc_t*cmd)
+bool cmd_vfd(command_from_pc_t *cmd)
 {
     deck_led_vfd_trig_enum_t type;
     if (cmd->cmd == CMD_VFD_BLINK)
@@ -1176,35 +1307,59 @@ bool cmd_vfd(command_from_pc_t*cmd)
 
     switch (cmd->value)
     {
-        /* T. */
-        case 0x01:  break;
-        /* REMAIN */
-        case 0x02:  item = &decks[cmd->deck].vfd.remain; break;
-        /* ELAPSED */
-        case 0x03:  item = &decks[cmd->deck].vfd.elapsed; break;
-        /* CONT. */
-        case 0x04:  item = &decks[cmd->deck].vfd.cont; break;
-        /* SINGLE */
-        case 0x05:  item = &decks[cmd->deck].vfd.single; break;
-        /* BPM */
-        case 0x06:  break;
-        /* m */
-        case 0x07:  break;
-        /* s */
-        case 0x08:  break;
-        /* f */
-        case 0x09:  break;
-        /* Pitch dot Right */
-        case 0x0A:  item = &decks[cmd->deck].vfd.pitch_dot_right; break;
-        /* Pitch dot center */
-        case 0x0B:  item = &decks[cmd->deck].vfd.pitch_dot_center; break;
-        /* Pitch dot left */
-        case 0x0C:  item = &decks[cmd->deck].vfd.pitch_dot_left; break;
-        /* Key ADJ */
-        case 0x14:  item = &decks[cmd->deck].vfd.key_adj; break;
-        /* Track position blink */
-        case 0x21:  item = &decks[cmd->deck].vfd.track_pos_blink; break;
-        default:    break;
+    /* T. */
+    case 0x01:
+        break;
+    /* REMAIN */
+    case 0x02:
+        item = &decks[cmd->deck].vfd.remain;
+        break;
+    /* ELAPSED */
+    case 0x03:
+        item = &decks[cmd->deck].vfd.elapsed;
+        break;
+    /* CONT. */
+    case 0x04:
+        item = &decks[cmd->deck].vfd.cont;
+        break;
+    /* SINGLE */
+    case 0x05:
+        item = &decks[cmd->deck].vfd.single;
+        break;
+    /* BPM */
+    case 0x06:
+        break;
+    /* m */
+    case 0x07:
+        break;
+    /* s */
+    case 0x08:
+        break;
+    /* f */
+    case 0x09:
+        break;
+    /* Pitch dot Right */
+    case 0x0A:
+        item = &decks[cmd->deck].vfd.pitch_dot_right;
+        break;
+    /* Pitch dot center */
+    case 0x0B:
+        item = &decks[cmd->deck].vfd.pitch_dot_center;
+        break;
+    /* Pitch dot left */
+    case 0x0C:
+        item = &decks[cmd->deck].vfd.pitch_dot_left;
+        break;
+    /* Key ADJ */
+    case 0x14:
+        item = &decks[cmd->deck].vfd.key_adj;
+        break;
+    /* Track position blink */
+    case 0x21:
+        item = &decks[cmd->deck].vfd.track_pos_blink;
+        break;
+    default:
+        break;
     }
 
     if (item == NULL)
@@ -1314,7 +1469,7 @@ bool cmd_led(command_from_pc_t*cmd)
     return false;
 }
 #endif
-bool cmd_led(command_from_pc_t*cmd)
+bool cmd_led(command_from_pc_t *cmd)
 {
     deck_led_vfd_trig_enum_t type;
     if (cmd->value == 127)
@@ -1328,78 +1483,99 @@ bool cmd_led(command_from_pc_t*cmd)
 
     switch (cmd->cmd)
     {
-        /* Playlist */
-        // case 0x02: item = &decks[cmd->deck].leds.; break;
-        /* Pitch match LED */
-        // case 0x04: item = &decks[cmd->deck].leds.; break;
-        /* JOG mode Green */
-        // case 0x05: item = &decks[cmd->deck].leds.; break;
-        /* JOG mode Orange */
-        // case 0x06: item = &decks[cmd->deck].leds.; break;
-        /* Pitch/KEY Green */
-        case CC_LED_PITCH: item = &decks[cmd->deck].leds.pitch; break;
-        /* Pitch/KEY Orange */
-        case CC_LED_KEY: item = &decks[cmd->deck].leds.key; break;
-        /* TAP Green */
-        // case 0x09: item = &decks[cmd->deck].leds.; break;
-        /* TAP Orange */
-        // case 0x0A: item = &decks[cmd->deck].leds.; break;
-        /* EFX1/ECHO/LOOP RED */
-        case CC_LED_LOOP: item = &decks[cmd->deck].leds.loop; break;
-        /* EFX1 Green */
-        case CC_LED_LOOP_A: item = &decks[cmd->deck].leds.loop_a; break;
-        /* EFX2/FLANGER RED */
-        case CC_LED_LOOP_B: item = &decks[cmd->deck].leds.loop_b; break;
-        /* EFX2 Green */
-        // case 0x0E: item = &decks[cmd->deck].leds.; break;
-        /* EFX3/FILTER RED */
-        // case 0x0F: item = &decks[cmd->deck].leds.; break;
-        /* EFX3 Green */
-        // case 0x10: item = &decks[cmd->deck].leds.; break;
-        /* HOT1 */
-        // case 0x11: item = &decks[cmd->deck].leds.; break;
-        /* HOT1 Dimmer */
-        // case 0x12: item = &decks[cmd->deck].leds.; break;
-        /* HOT2 */
-        // case 0x13: item = &decks[cmd->deck].leds.; break;
-        /* HOT2 Dimmer */
-        // case 0x14: item = &decks[cmd->deck].leds.; break;
-        /* HOT3 */
-        // case 0x15: item = &decks[cmd->deck].leds.; break;
-        /* HOT3 Dimmer */
-        // case 0x16: item = &decks[cmd->deck].leds.; break;
-        /* HOT4 */
-        // case 0x17: item = &decks[cmd->deck].leds.; break;
-        /* HOT4 Dimmer */
-        // case 0x18: item = &decks[cmd->deck].leds.; break;
-        /* HOT5 */
-        // case 0x19: item = &decks[cmd->deck].leds.; break;
-        /* HOT5 Dimmer */
-        // case 0x1A: item = &decks[cmd->deck].leds.; break;
-        /* Parameter KNOB */
-        // case 0x1E: item = &decks[cmd->deck].leds.; break;
-        /* A1 */
-        // case 0x24: item = &decks[cmd->deck].leds.; break;
-        /* A1 Dimmer */
-        // case 0x3C: item = &decks[cmd->deck].leds.; break;
-        /* A2 */
-        // case 0x25: item = &decks[cmd->deck].leds.; break;
-        /* A2 Dimmer */
-        // case 0x3D: item = &decks[cmd->deck].leds.; break;
-        /* Cue */
-        case CC_LED_CUE: item = &decks[cmd->deck].leds.cue; break;
-        /* Play */
-        case CC_LED_PLAY: item = &decks[cmd->deck].leds.play; break;
-        /* Jogwheel */
-        // case 0x3B: item = &decks[cmd->deck].leds.; break;
-        /* Reverse */
-        case CC_LED_REV: item = &decks[cmd->deck].leds.rev; break;
-        /* Stby */
-        case CC_LED_STBY: item = &decks[cmd->deck].leds.stby; break;
-        /* Sample */
-        case CC_LED_SAMP: item = &decks[cmd->deck].leds.samp; break;
+    /* Playlist */
+    // case 0x02: item = &decks[cmd->deck].leds.; break;
+    /* Pitch match LED */
+    // case 0x04: item = &decks[cmd->deck].leds.; break;
+    /* JOG mode Green */
+    // case 0x05: item = &decks[cmd->deck].leds.; break;
+    /* JOG mode Orange */
+    // case 0x06: item = &decks[cmd->deck].leds.; break;
+    /* Pitch/KEY Green */
+    case CC_LED_PITCH:
+        item = &decks[cmd->deck].leds.pitch;
+        break;
+    /* Pitch/KEY Orange */
+    case CC_LED_KEY:
+        item = &decks[cmd->deck].leds.key;
+        break;
+    /* TAP Green */
+    // case 0x09: item = &decks[cmd->deck].leds.; break;
+    /* TAP Orange */
+    // case 0x0A: item = &decks[cmd->deck].leds.; break;
+    /* EFX1/ECHO/LOOP RED */
+    case CC_LED_LOOP:
+        item = &decks[cmd->deck].leds.loop;
+        break;
+    /* EFX1 Green */
+    case CC_LED_LOOP_A:
+        item = &decks[cmd->deck].leds.loop_a;
+        break;
+    /* EFX2/FLANGER RED */
+    case CC_LED_LOOP_B:
+        item = &decks[cmd->deck].leds.loop_b;
+        break;
+    /* EFX2 Green */
+    // case 0x0E: item = &decks[cmd->deck].leds.; break;
+    /* EFX3/FILTER RED */
+    // case 0x0F: item = &decks[cmd->deck].leds.; break;
+    /* EFX3 Green */
+    // case 0x10: item = &decks[cmd->deck].leds.; break;
+    /* HOT1 */
+    // case 0x11: item = &decks[cmd->deck].leds.; break;
+    /* HOT1 Dimmer */
+    // case 0x12: item = &decks[cmd->deck].leds.; break;
+    /* HOT2 */
+    // case 0x13: item = &decks[cmd->deck].leds.; break;
+    /* HOT2 Dimmer */
+    // case 0x14: item = &decks[cmd->deck].leds.; break;
+    /* HOT3 */
+    // case 0x15: item = &decks[cmd->deck].leds.; break;
+    /* HOT3 Dimmer */
+    // case 0x16: item = &decks[cmd->deck].leds.; break;
+    /* HOT4 */
+    // case 0x17: item = &decks[cmd->deck].leds.; break;
+    /* HOT4 Dimmer */
+    // case 0x18: item = &decks[cmd->deck].leds.; break;
+    /* HOT5 */
+    // case 0x19: item = &decks[cmd->deck].leds.; break;
+    /* HOT5 Dimmer */
+    // case 0x1A: item = &decks[cmd->deck].leds.; break;
+    /* Parameter KNOB */
+    // case 0x1E: item = &decks[cmd->deck].leds.; break;
+    /* A1 */
+    // case 0x24: item = &decks[cmd->deck].leds.; break;
+    /* A1 Dimmer */
+    // case 0x3C: item = &decks[cmd->deck].leds.; break;
+    /* A2 */
+    // case 0x25: item = &decks[cmd->deck].leds.; break;
+    /* A2 Dimmer */
+    // case 0x3D: item = &decks[cmd->deck].leds.; break;
+    /* Cue */
+    case CC_LED_CUE:
+        item = &decks[cmd->deck].leds.cue;
+        break;
+    /* Play */
+    case CC_LED_PLAY:
+        item = &decks[cmd->deck].leds.play;
+        break;
+    /* Jogwheel */
+    // case 0x3B: item = &decks[cmd->deck].leds.; break;
+    /* Reverse */
+    case CC_LED_REV:
+        item = &decks[cmd->deck].leds.rev;
+        break;
+    /* Stby */
+    case CC_LED_STBY:
+        item = &decks[cmd->deck].leds.stby;
+        break;
+    /* Sample */
+    case CC_LED_SAMP:
+        item = &decks[cmd->deck].leds.samp;
+        break;
 
-        default:    break;
+    default:
+        break;
     }
 
     if (item == NULL)
@@ -1414,15 +1590,15 @@ bool cmd_led(command_from_pc_t*cmd)
     return false;
 }
 
-
-bool cmd_position(command_from_pc_t*cmd)
+bool cmd_position(command_from_pc_t *cmd)
 {
     if (decks[cmd->deck].track_pos_is_rev && (cmd->cmd == CMD_TRACK_POS_REVERSE))
     {
         if (decks[cmd->deck].track_pos == cmd->value)
             return false;
-    } else if ((decks[cmd->deck].track_pos_is_rev == false) &&
-        (cmd->cmd == CMD_TRACK_POS_NORMAL))
+    }
+    else if ((decks[cmd->deck].track_pos_is_rev == false) &&
+             (cmd->cmd == CMD_TRACK_POS_NORMAL))
     {
         if (decks[cmd->deck].track_pos == cmd->value)
             return false;
@@ -1485,7 +1661,6 @@ bool blink_vfd_led(uint8_t deck)
     blink_vfd_single(decks[deck].vfd.pitch_dot_left, LCD_ICON_PITCH_DOT, blink_phase, deck);
     blink_vfd_single(decks[deck].vfd.key_adj, LCD_ICON_KEY, blink_phase, deck);
 
-
     blink_led_single(decks[deck].leds.loop, LED_LOOP, blink_phase, deck);
     blink_led_single(decks[deck].leds.loop_a, LED_LOOP_A, blink_phase, deck);
     blink_led_single(decks[deck].leds.rev, LED_SAMP_REVERSE, blink_phase, deck);
@@ -1527,11 +1702,11 @@ bool blink_vfd_led(uint8_t deck)
 void StartTask02(void const * argument)
 {
   /* USER CODE BEGIN StartTask02 */
-    //HAL_GPIO_WritePin(LCD_INH_GPIO_Port, LCD_INH_Pin, 1);
+    // HAL_GPIO_WritePin(LCD_INH_GPIO_Port, LCD_INH_Pin, 1);
 
     /* Infinite loop */
     osEvent msg;
-    command_from_pc_t *cmd = (command_from_pc_t*)&msg.value;
+    command_from_pc_t *cmd = (command_from_pc_t *)&msg.value;
     bool handled = false;
     for (;;)
     {
@@ -1548,33 +1723,42 @@ void StartTask02(void const * argument)
                 /* process */
                 switch (cmd->cmd)
                 {
-                    case CMD_MINUTES:   handled = cmd_minutes(cmd); break;
-                    case CMD_SECONDS:   handled = cmd_seconds(cmd); break;
-                    case CMD_FRAMES:    handled = cmd_frames(cmd); break;
-                    case CMD_PITCH_POL: handled = cmd_pitch_pol(cmd); break;
+                case CMD_MINUTES:
+                    handled = cmd_minutes(cmd);
+                    break;
+                case CMD_SECONDS:
+                    handled = cmd_seconds(cmd);
+                    break;
+                case CMD_FRAMES:
+                    handled = cmd_frames(cmd);
+                    break;
+                case CMD_PITCH_POL:
+                    handled = cmd_pitch_pol(cmd);
+                    break;
 
-                    case CMD_VFD_ON:
-                    case CMD_VFD_BLINK:
-                    case CMD_VFD_OFF:
-                    {
-                        handled = cmd_vfd(cmd);
-                        break;
-                    }
+                case CMD_VFD_ON:
+                case CMD_VFD_BLINK:
+                case CMD_VFD_OFF:
+                {
+                    handled = cmd_vfd(cmd);
+                    break;
+                }
 
-                    case CMD_PITCH_MSB:
-                    case CMD_PITCH_LSB:
-                    {
-                        handled = cmd_pitch(cmd);
-                        break;
-                    }
+                case CMD_PITCH_MSB:
+                case CMD_PITCH_LSB:
+                {
+                    handled = cmd_pitch(cmd);
+                    break;
+                }
 
-                    case CMD_TRACK_POS_NORMAL:
-                    case CMD_TRACK_POS_REVERSE:
-                    {
-                        handled = cmd_position(cmd);
-                        break;
-                    }
-                    default: break;
+                case CMD_TRACK_POS_NORMAL:
+                case CMD_TRACK_POS_REVERSE:
+                {
+                    handled = cmd_position(cmd);
+                    break;
+                }
+                default:
+                    break;
                 }
             }
         }
@@ -1589,7 +1773,8 @@ void StartTask02(void const * argument)
 
 /* USER CODE BEGIN Header_StartTaskScan */
 
-enum {
+enum
+{
     SCAN_KEY,
     SCAN_ENCODER,
 } ScanSM = SCAN_KEY;
@@ -1602,47 +1787,55 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     switch (ScanSM)
     {
-        case SCAN_KEY:
-        {
-            break;
-        }
-        case SCAN_ENCODER:
-        {
-            break;
-        }
+    case SCAN_KEY:
+    {
+        break;
     }
-
-    //HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+    case SCAN_ENCODER:
+    {
+        break;
+    }
+    }
 
     led_keep_displaying_one(ScanLedPos);
 
-    if (++ScanLedPos == LED_LAST*2)
+    if (++ScanLedPos == LED_LAST * 2)
     {
         ScanLedPos = 0;
     }
 }
 
 /**
-* @brief Function implementing the taskScan thread.
-* @param argument: Not used
-* @retval None
-*/
+ * @brief Function implementing the taskScan thread.
+ * @param argument: Not used
+ * @retval None
+ */
 /* USER CODE END Header_StartTaskScan */
 void StartTaskScan(void const * argument)
 {
   /* USER CODE BEGIN StartTaskScan */
 
-  // see https://deepbluembedded.com/stm32-timer-calculator/
-  HAL_TIM_Base_Start_IT(&htim1);
+    // see https://deepbluembedded.com/stm32-timer-calculator/
+    HAL_TIM_Base_Start_IT(&htim1);
 
-  decks[0].leds.cue = TYPE_ON;
-  decks[0].leds.play = TYPE_BLINK;
-  
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+    decks[0].leds.key = TYPE_BLINK;
+    decks[1].leds.key = TYPE_BLINK;
+    /* Infinite loop */
+    for (;;)
+    {
+        /* Infinite loop */
+        osEvent msg;
+        command_from_pc_t *cmd = (command_from_pc_t *)&msg.value;
+        bool handled = false;
+        for (;;)
+        {
+            msg = osMessageGet(QueueScanEventHandle, 100);
+            if (msg.status == osEventMessage)
+            {
+            }
+        }
+        osDelay(1);
+    }
   /* USER CODE END StartTaskScan */
 }
 
